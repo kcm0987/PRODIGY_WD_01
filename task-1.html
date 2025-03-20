@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Navigation Menu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      height: 200vh; /* Extra height to demonstrate scroll effect */
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .nav-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      /* Initial state of nav bar */
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .scrolled {
+      background-color: #2c3e50;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-container.scrolled .nav-link {
+      color: #ecf0f1;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #e74c3c;
+      text-decoration: none;
+    }
+    
+    .nav-container.scrolled .logo {
+      color: #e74c3c;
+      text-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 25px;
+      position: relative;
+    }
+    
+    .nav-link {
+      color: #34495e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.2s ease-in-out;
+    }
+    
+    .nav-link:hover {
+      color: #e74c3c;
+      background-color: rgba(236, 240, 241, 0.5);
+    }
+    
+    .nav-container.scrolled .nav-link:hover {
+      color: #e74c3c;
+      background-color: rgba(44, 62, 80, 0.8);
+    }
+    
+    /* Underline effect on hover */
+    .nav-item::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background-color: #e74c3c;
+      transition: all 0.3s ease-out;
+    }
+    
+    .nav-item:hover::after {
+      width: 80%;
+      left: 10%;
+    }
+    
+    .nav-container.scrolled .nav-item::after {
+      background-color: #e74c3c;
+    }
+    
+    .active {
+      color: #e74c3c;
+    }
+    
+    .nav-container.scrolled .active {
+      color: #e74c3c;
+    }
+    
+    /* Toggle menu for mobile */
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+    }
+    
+    .bar {
+      display: block;
+      width: 25px;
+      height: 3px;
+      margin: 5px auto;
+      background-color: #333;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-container.scrolled .bar {
+      background-color: #ecf0f1;
+    }
+    
+    /* Content for demonstration */
+    .content {
+      max-width: 1000px;
+      margin: 100px auto 40px;
+      padding: 20px;
+    }
+    
+    /* Media Queries for Responsiveness */
+    @media screen and (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .menu-toggle.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+      
+      .menu-toggle.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+      
+      .nav-links {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background-color: #fff;
+        border-radius: 0 0 5px 5px;
+        text-align: center;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transition: 0.3s;
+        overflow: hidden;
+        max-height: 0;
+      }
+      
+      .nav-container.scrolled .nav-links {
+        background-color: #2c3e50;
+      }
+      
+      .nav-links.active {
+        max-height: 300px;
+        padding: 10px 0;
+      }
+      
+      .nav-item {
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation bar -->
+  <div class="nav-container" id="navbar">
+    <nav class="navbar">
+      <a href="#" class="logo">BRAND</a>
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+      <ul class="nav-links" id="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Portfolio</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  
+  <!-- Page content for demo -->
+  <div class="content">
+    <h1>Scroll Down to See the Navigation Menu Change</h1>
+    <p>This is a sample page to demonstrate the fixed navigation menu that changes its appearance on scroll and hover.</p>
+    <p>Keep scrolling to see the effect!</p>
+  </div>
+  
+  <script>
+    /* This script manages the navigation behavior */
+    
+    // Get DOM elements
+    const navbar = document.getElementById('navbar');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navMenu = document.getElementById('nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Toggle mobile menu
+    mobileMenu.addEventListener('click', function() {
+      this.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+    
+    // Change nav style on scroll
+    window.addEventListener('scroll', function() {
+      // We're using 80px as our threshold for the scroll effect
+      if (window.scrollY > 80) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+    
+    // Set active link and close mobile menu when clicking nav items
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Remove active class from all links
+        navLinks.forEach(item => {
+          item.classList.remove('active');
+        });
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Close mobile menu when a link is clicked
+        mobileMenu.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+    
+    // Sticky nav implementation with better performance
+    let lastScrollTop = 0;
+    
+    function handleScroll() {
+      let st = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Add some subtle "bouncy" movement to the navbar
+      if (st > lastScrollTop && st > 200) {
+        // Scrolling down past threshold
+        navbar.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          navbar.style.transform = 'translateY(0)';
+        }, 200);
+      }
+      
+      lastScrollTop = st <= 0 ? 0 : st;
+    }
+    
+    // Use requestAnimationFrame for smoother performance
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  </script>
+</body>
+</html>
